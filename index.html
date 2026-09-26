@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KBSL Events — L'art de recevoir, sans faille</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black: #0a0a0a;
+    --black-deep: #000000;
+    --silver: #c9cacc;
+    --silver-bright: #e9e9ea;
+    --white: #f7f7f5;
+    --grey-dim: #8f8f90;
+    --line: rgba(233,233,234,0.16);
+    --ease: cubic-bezier(.16,.84,.44,1);
+    --ease-soft: cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{
+    scroll-behavior:smooth;
+    scroll-padding-top: 90px;
+  }
+  html, body{ overflow-x: hidden; }
+
+  body{
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    opacity: 0;
+    animation: body-fade 1s var(--ease-soft) forwards;
+  }
+  @keyframes body-fade{ to{ opacity:1; } }
+
+  h1,h2,h3,.display{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    color: var(--white);
+  }
+
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+
+  .wrap{ max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width:640px){ .wrap{padding: 0 22px;} }
+
+  :focus-visible{ outline: 1px solid var(--silver-bright); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
+
+  .eyebrow{
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--grey-dim);
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position: fixed; top:0; left:0; right:0; z-index:50;
+    padding: 28px 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0));
+    transition: padding .5s var(--ease), background .5s var(--ease);
+  }
+  .nav.scrolled{
+    padding: 16px 0;
+    background: rgba(0,0,0,0.96);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(6px);
+  }
+  .nav .wrap{ display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand .mark{
+    width: 42px; height:42px;
+    border-radius:50%;
+    overflow:hidden;
+    border: 1px solid var(--silver);
+  }
+  .brand .mark img{ width:100%; height:100%; object-fit:cover; }
+  .brand .name{
+    font-family:'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+  }
+  .nav-links{ display:flex; gap:40px; font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; color: var(--grey-dim); }
+  .nav-links a{
+    text-decoration:none;
+    position: relative;
+    padding-bottom: 3px;
+    transition: color .4s var(--ease);
+  }
+  .nav-links a::after{
+    content:'';
+    position:absolute; left:0; bottom:0;
+    width:100%; height:1px;
+    background: var(--silver-bright);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .45s var(--ease);
+  }
+  .nav-links a:hover{ color: var(--silver-bright); }
+  .nav-links a:hover::after{ transform: scaleX(1); transform-origin: left; }
+  .nav-cta{
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--silver);
+    padding: 11px 22px;
+    text-decoration:none;
+    color: var(--white);
+    white-space:nowrap;
+    transition: background .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease), transform .35s var(--ease);
+  }
+  .nav-cta:hover{ background: var(--silver-bright); color: var(--black-deep); transform: translateY(-1px); }
+  @media (max-width:920px){ .nav-links{display:none;} }
+
+  /* ---------- HERO : asymmetric split ---------- */
+  .hero{
+    position:relative;
+    min-height: 100svh;
+    display:flex; align-items:center;
+    overflow:hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 40px;
+    align-items:center;
+    width:100%;
+    padding-top: 130px;
+    padding-bottom: 90px;
+  }
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns: 1fr; }
+  }
+
+  .hero-left .eyebrow{ margin-bottom: 30px; }
+  .hero h1{
+    font-weight: 300;
+    font-size: clamp(2.8rem, 6.4vw, 5.4rem);
+    line-height: 1.04;
+    letter-spacing: 0.01em;
+    margin-bottom: 34px;
+  }
+  .hero h1 em{ font-style: italic; font-weight: 400; }
+  .hero h1 .thin-rule{
+    display:block;
+    width: 70px; height:1px;
+    background: var(--silver);
+    margin: 28px 0;
+  }
+
+  .hero p.lede{
+    max-width: 42ch;
+    font-size: 1.08rem;
+    color: var(--grey-dim);
+    margin-bottom: 44px;
+  }
+
+  .hero-actions{ display:flex; gap:26px; flex-wrap:wrap; align-items:center; }
+  /* Buttons: smoother, springier easing */
+  .btn-primary{
+    background: var(--silver-bright);
+    color: var(--black-deep);
+    text-decoration:none;
+    padding: 16px 32px;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: inline-block;
+    transition: transform .45s var(--ease), background .45s var(--ease), box-shadow .45s var(--ease);
+  }
+  .btn-primary:hover{ background: var(--white); transform: translateY(-2px); box-shadow: 0 12px 30px -12px rgba(255,255,255,0.25); }
+  .btn-primary:active{ transform: translateY(0); }
+  .btn-ghost{
+    text-decoration:none;
+    color: var(--white);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 5px;
+    transition: border-color .4s var(--ease), color .4s var(--ease), letter-spacing .4s var(--ease);
+  }
+  .btn-ghost:hover{ border-color: var(--silver-bright); color: var(--silver-bright); letter-spacing: 0.2em; }
+
+  /* ---------- SCROLL REVEAL SYSTEM ---------- */
+  .sr{
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 1s var(--ease-soft), transform 1s var(--ease-soft);
+    will-change: opacity, transform;
+  }
+  .sr.sr-visible{ opacity: 1; transform: translateY(0); }
+  .sr-scale{ transform: scale(0.94); }
+  .sr-scale.sr-visible{ transform: scale(1); }
+  .sr-fade{ transform: none; }
+  /* staggered delays for grouped children */
+  .sr-group > *{ transition-delay: calc(var(--sr-i, 0) * 0.09s); }
+  @media (prefers-reduced-motion: reduce){
+    .sr, .sr-scale{ opacity:1 !important; transform:none !important; transition:none !important; }
+  }
+
+  .hero-right{ position:relative; display:flex; align-items:center; justify-content:center; }
+  .crown-frame{
+    position:relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    overflow: hidden;
+    background: #000;
+    transition: transform .6s var(--ease-soft);
+  }
+  .crown-frame img{ width:100%; height:100%; object-fit:cover; }
+  @media (max-width: 900px){ .hero-right{ margin-top: 50px; } .crown-frame{ max-width: 260px; } }
+
+  /* ---------- MARQUEE ---------- */
+  .marquee-strip{
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+    overflow:hidden;
+    background: var(--black-deep);
+  }
+  .marquee-track{
+    display:flex; gap: 56px; white-space:nowrap;
+    animation: scroll-left 34s linear infinite;
+    width: max-content;
+  }
+  .marquee-track span{
+    font-family:'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--grey-dim);
+  }
+  .marquee-track span.accent{ color: var(--white); font-style: normal; letter-spacing:0.08em; font-family:'Jost',sans-serif; font-size:0.72rem; text-transform:uppercase; }
+  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ---------- GALLERY ---------- */
+  .gallery{ padding: 130px 0 100px; }
+  .section-head{ max-width: 640px; margin-bottom: 80px; }
+  .section-head .eyebrow{ margin-bottom: 20px; }
+  .section-head h2{ font-size: clamp(1.9rem, 3.6vw, 2.8rem); font-weight:300; line-height:1.25; }
+  .section-head h2 em{ font-style: italic; }
+  .section-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
+
+  .gallery-stagger{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .gallery-stagger .g-item{ position:relative; overflow:hidden; }
+  .gallery-stagger .g-item:nth-child(1){ margin-top: 0; aspect-ratio: 3/4; }
+  .gallery-stagger .g-item:nth-child(2){ margin-top: 60px; aspect-ratio: 3/4.3; }
+  .gallery-stagger .g-item:nth-child(3){ margin-top: 0; aspect-ratio: 3/4; }
+  .gallery-stagger img{
+    width:100%; height:100%; object-fit:cover;
+    filter: grayscale(0.15) contrast(1.05);
+    transition: transform 6s var(--ease-soft), filter .6s var(--ease-soft);
+  }
+  .gallery-stagger .g-item:hover img{ transform: scale(1.06); filter: grayscale(0) contrast(1.05); }
+  .gallery-stagger .g-item::after{
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.82) 100%);
+  }
+  .gallery-stagger .g-cap{ position:absolute; left:20px; right:20px; bottom:18px; z-index:2; }
+  .gallery-stagger .g-cap .eyebrow{ margin-bottom: 6px; color: var(--silver-bright); }
+  .gallery-stagger .g-cap p{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.1rem; }
+  @media (max-width: 860px){
+    .gallery-stagger{ grid-template-columns: 1fr; }
+    .gallery-stagger .g-item, .gallery-stagger .g-item:nth-child(2){ margin-top:0; aspect-ratio: 4/3; }
+  }
+
+  /* ---------- SECOND GALLERY ROW (mosaic) ---------- */
+  .mosaic{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 24px;
+  }
+  .mosaic .m-item{ position:relative; overflow:hidden; aspect-ratio: 1; }
+  .mosaic .m-item img{
+    width:100%; height:100%; object-fit:cover;
+    filter: grayscale(0.15) contrast(1.05);
+    transition: transform 6s var(--ease-soft), filter .6s var(--ease-soft);
+  }
+  .mosaic .m-item:hover img{ transform: scale(1.08); filter: grayscale(0); }
+  .mosaic .m-item::after{
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.8) 100%);
+  }
+  .mosaic .m-cap{ position:absolute; left:14px; right:14px; bottom:12px; font-size:0.72rem; letter-spacing:0.06em; color: var(--silver-bright); z-index:2; }
+  @media (max-width: 860px){ .mosaic{ grid-template-columns: repeat(2,1fr); } }
+
+  /* ---------- SERVICES : vertical list ---------- */
+  .services{ padding: 40px 0 130px; }
+  .service-row{
+    display:grid;
+    grid-template-columns: 100px 1fr 1.2fr;
+    gap: 40px;
+    padding: 44px 0;
+    border-top: 1px solid var(--line);
+    align-items:start;
+  }
+  .service-row:last-child{ border-bottom: 1px solid var(--line); }
+  @media (max-width: 780px){ .service-row{ grid-template-columns: 1fr; gap:14px; padding: 34px 0; } }
+  .service-row .roman{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size: 1.6rem; color: var(--silver); }
+  .service-row h3{ font-size: 1.6rem; font-weight:400; }
+  .service-row p{ color: var(--grey-dim); font-size: 0.98rem; max-width: 52ch; }
+
+  /* ---------- TEAM (Hôtesses) ---------- */
+  .team{ padding: 130px 0; background: var(--black-deep); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .team-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .team-grid .t-photo{ position:relative; overflow:hidden; aspect-ratio: 3/4; }
+  .team-grid .t-photo img{
+    width:100%; height:100%; object-fit:cover;
+    object-position: top;
+    filter: grayscale(0.2) contrast(1.05);
+    transition: transform 6s var(--ease-soft), filter .6s var(--ease-soft);
+  }
+  .team-grid .t-photo:hover img{ transform: scale(1.06); filter: grayscale(0); }
+  @media (max-width: 860px){ .team-grid{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px){ .team-grid{ grid-template-columns: 1fr; } }
+
+  /* ---------- FOUNDER ---------- */
+  .founder{ padding: 130px 0; }
+  .founder-grid{
+    display:grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 60px;
+    align-items:center;
+  }
+  @media (max-width: 860px){ .founder-grid{ grid-template-columns: 1fr; gap:40px; } }
+  .founder-photo{ position:relative; overflow:hidden; aspect-ratio: 4/5; }
+  .founder-photo img{ width:100%; height:100%; object-fit:cover; filter: grayscale(0.1) contrast(1.05); }
+  .founder-text .eyebrow{ margin-bottom: 22px; }
+  .founder-text h2{ font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight:300; margin-bottom: 26px; line-height:1.3; }
+  .founder-text h2 em{ font-style:italic; }
+  .founder-text p{ color: var(--grey-dim); font-size: 1rem; max-width: 52ch; margin-bottom: 18px; }
+  .founder-text .signature{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size: 1.3rem; margin-top: 26px; color: var(--white); }
+
+  /* ---------- TRUST ---------- */
+  .trust{
+    padding: 110px 0;
+    text-align:center;
+    background: var(--black-deep);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .trust .stars{ color: var(--silver-bright); letter-spacing: 6px; margin-bottom: 28px; font-size: 0.9rem; }
+  .trust blockquote{
+    font-family:'Cormorant Garamond', serif; font-style:italic; font-weight:400;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    max-width: 28ch; margin: 0 auto 26px; line-height:1.4;
+  }
+  .trust cite{ font-style:normal; font-size: 0.72rem; letter-spacing:0.15em; text-transform:uppercase; color: var(--grey-dim); }
+  .trust .followers{ margin-top: 50px; font-size: 0.78rem; letter-spacing:0.1em; text-transform:uppercase; color: var(--grey-dim); }
+  .trust .followers strong{ color: var(--white); font-family:'Cormorant Garamond', serif; font-size:1.3rem; letter-spacing:0; text-transform:none; }
+
+  /* ---------- PROCESS : timeline ---------- */
+  .process{ padding: 130px 0; }
+  .timeline{ position:relative; max-width: 780px; margin: 0 auto; }
+  .timeline::before{
+    content:''; position:absolute; left: 14px; top:8px; bottom:8px; width:1px;
+    background: var(--line);
+  }
+  @media (max-width:640px){ .timeline::before{ left: 10px; } }
+  .t-item{ position:relative; padding-left: 56px; padding-bottom: 54px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:''; position:absolute; left: 8px; top: 6px; width:13px; height:13px;
+    border-radius:50%; border: 1px solid var(--silver-bright); background: var(--black);
+  }
+  @media (max-width:640px){ .t-item{ padding-left:40px; } .t-item::before{ left:4px; } }
+  .t-item .step-label{ font-size: 0.7rem; letter-spacing:0.2em; text-transform:uppercase; color: var(--grey-dim); margin-bottom: 10px; }
+  .t-item h3{ font-size: 1.5rem; font-weight:400; margin-bottom: 10px; }
+  .t-item p{ color: var(--grey-dim); font-size: 0.95rem; max-width: 50ch; }
+
+  /* ---------- CONTACT ---------- */
+  .contact{
+    padding: 130px 0 110px;
+    border-top: 1px solid var(--line);
+  }
+  .contact-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 70px;
+  }
+  @media (max-width: 860px){ .contact-grid{ grid-template-columns:1fr; gap:50px; } }
+  .contact h2{ font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight:300; line-height:1.15; margin-bottom: 26px; }
+  .contact h2 em{ font-style:italic; }
+  .contact p.lede{ color: var(--grey-dim); max-width: 42ch; margin-bottom: 44px; }
+
+  .contact-card{ border: 1px solid var(--line); padding: 42px; }
+  .contact-card .row{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding: 20px 0; border-bottom: 1px solid var(--line); gap: 20px;
+  }
+  .contact-card .row:last-child{ border-bottom:none; }
+  .contact-card .label{ font-size: 0.7rem; letter-spacing:0.12em; text-transform:uppercase; color: var(--grey-dim); }
+  .contact-card .value{ font-family:'Cormorant Garamond', serif; font-size: 1.15rem; text-align:right; }
+  .contact-card .value a{ text-decoration:none; color: var(--white); border-bottom: 1px solid var(--line); }
+  .contact-card .value a:hover{ color: var(--silver-bright); border-color: var(--silver-bright); }
+
+  .ig-btn{
+    margin-top: 30px; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background: var(--silver-bright); color: var(--black-deep);
+    text-decoration:none; padding: 17px;
+    font-size: 0.72rem; letter-spacing:0.15em; text-transform:uppercase; font-weight:500;
+    transition: background .25s ease, transform .25s ease;
+  }
+  .ig-btn:hover{ background: var(--white); transform: translateY(-1px); }
+
+  footer{ padding: 40px 0; border-top: 1px solid var(--line); }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    font-size: 0.72rem; letter-spacing:0.08em; text-transform:uppercase; color: var(--grey-dim);
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark"><img src="images/logo.jpg" alt="Logo KBSL Events"></span>
+      <span class="name">KBSL Events</span>
+    </div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#galerie">Réalisations</a>
+      <a href="#equipe">Équipe</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a class="nav-cta" href="https://www.instagram.com/kbsl_events/" target="_blank" rel="noopener">Nous écrire</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-left">
+      <div class="eyebrow sr" style="transition-delay:.05s">Wedding &amp; Event Planning — Kinshasa</div>
+      <h1 class="sr" style="transition-delay:.15s">
+        L'art de recevoir,<br>
+        <em>sans faille.</em>
+        <span class="thin-rule"></span>
+      </h1>
+      <p class="lede sr" style="transition-delay:.28s">KBSL Events imagine, organise et orchestre vos mariages et célébrations dans les moindres détails — de la décoration au mobilier, jusqu'au jour J où plus rien ne doit vous inquiéter.</p>
+      <div class="hero-actions sr" style="transition-delay:.4s">
+        <a class="btn-primary" href="https://www.instagram.com/kbsl_events/" target="_blank" rel="noopener">Demander un devis</a>
+        <a class="btn-ghost" href="#services">Voir nos services</a>
+      </div>
+    </div>
+    <div class="hero-right sr sr-scale" style="transition-delay:.35s">
+      <div class="crown-frame" id="heroParallax">
+        <img src="images/logo.jpg" alt="Logo KBSL Events — couronne et monogramme">
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span class="accent">Wedding Planning</span>
+    <span>—</span>
+    <span class="accent">Décoration</span>
+    <span>—</span>
+    <span class="accent">Location de mobilier</span>
+    <span>—</span>
+    <span>1 235+ personnes nous suivent déjà</span>
+    <span>—</span>
+    <span class="accent">Wedding Planning</span>
+    <span>—</span>
+    <span class="accent">Décoration</span>
+    <span>—</span>
+    <span class="accent">Location de mobilier</span>
+    <span>—</span>
+    <span>1 235+ personnes nous suivent déjà</span>
+    <span>—</span>
+  </div>
+</div>
+
+<section class="gallery" id="galerie">
+  <div class="wrap">
+    <div class="section-head sr">
+      <div class="eyebrow">Quelques réalisations</div>
+      <h2>Chaque détail est pensé pour qu'il n'y ait <em>rien</em> à penser le jour J.</h2>
+    </div>
+    <div class="gallery-stagger sr-group">
+      <div class="g-item sr" style="--sr-i:0">
+        <img src="images/decor-table-doree.jpeg" alt="Table de réception dressée avec chaises dorées" loading="lazy">
+        <div class="g-cap"><span class="eyebrow">Réception privée</span><p>Une table qui raconte déjà l'histoire de la soirée.</p></div>
+      </div>
+      <div class="g-item sr" style="--sr-i:1">
+        <img src="images/allee-mariage-bougies.jpeg" alt="Allée de cérémonie de mariage bordée de bougies" loading="lazy">
+        <div class="g-cap"><span class="eyebrow">Cérémonie</span><p>Chaque allée devient un moment suspendu.</p></div>
+      </div>
+      <div class="g-item sr" style="--sr-i:2">
+        <img src="images/table-violette-2.jpeg" alt="Table de gala illuminée en ambiance violette" loading="lazy">
+        <div class="g-cap"><span class="eyebrow">Gala</span><p>Une ambiance qui ne laisse rien au hasard.</p></div>
+      </div>
+    </div>
+
+    <div class="mosaic sr-group">
+      <div class="m-item sr" style="--sr-i:0">
+        <img src="images/deco-ohbaby.jpeg" alt="Décoration baby shower Oh Baby" loading="lazy">
+        <div class="m-cap">Baby shower</div>
+      </div>
+      <div class="m-item sr" style="--sr-i:1">
+        <img src="images/deco-baby-mayson.jpeg" alt="Décoration premier anniversaire bleu et or" loading="lazy">
+        <div class="m-cap">1er anniversaire</div>
+      </div>
+      <div class="m-item sr" style="--sr-i:2">
+        <img src="images/deco-evjf.jpeg" alt="Décoration EVJF Let's Celebrate" loading="lazy">
+        <div class="m-cap">EVJF</div>
+      </div>
+      <div class="m-item sr" style="--sr-i:3">
+        <img src="images/arche-ballons-mayson.jpeg" alt="Arche de ballons bleu blanc et or" loading="lazy">
+        <div class="m-cap">Arche sur mesure</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="service-row sr">
+      <div class="roman">I.</div>
+      <h3>Wedding &amp; Event Planning</h3>
+      <p>De la première idée au dernier détail, nous concevons et pilotons votre mariage ou votre événement pour que vous puissiez simplement le vivre.</p>
+    </div>
+    <div class="service-row sr">
+      <div class="roman">II.</div>
+      <h3>Décoration</h3>
+      <p>Scénographie, fleurs, éclairages, ambiance — une décoration pensée pour votre univers, pas pour un catalogue.</p>
+    </div>
+    <div class="service-row sr">
+      <div class="roman">III.</div>
+      <h3>Location de mobilier événementiel</h3>
+      <p>Chaises, tables, éléments de réception : un mobilier choisi avec soin, livré et installé pour sublimer votre lieu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="team" id="equipe">
+  <div class="wrap">
+    <div class="section-head sr">
+      <div class="eyebrow">Notre équipe</div>
+      <h2>Des hôtesses formées pour que vos invités se sentent <em>attendus.</em></h2>
+    </div>
+    <div class="team-grid sr-group">
+      <div class="t-photo sr" style="--sr-i:0"><img src="images/hotesses-studio.jpeg" alt="Trois hôtesses KBSL en uniforme, portrait studio" loading="lazy"></div>
+      <div class="t-photo sr" style="--sr-i:1"><img src="images/hotesses-groupe.jpeg" alt="Équipe d'hôtesses KBSL avec la fondatrice lors d'un événement" loading="lazy"></div>
+      <div class="t-photo sr" style="--sr-i:2"><img src="images/hotesse-service.jpeg" alt="Hôtesse KBSL au service lors d'une réception" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<section class="founder">
+  <div class="wrap founder-grid">
+    <div class="founder-photo sr sr-scale">
+      <img src="images/fondatrice-bureau.jpeg" alt="Laura Kabasele, fondatrice de KBSL Events, à son bureau">
+    </div>
+    <div class="founder-text sr" style="transition-delay:.15s">
+      <div class="eyebrow">La fondatrice</div>
+      <h2>Derrière chaque événement KBSL, <em>une exigence.</em></h2>
+      <p>Chaque projet est pensé avec la même rigueur : comprendre votre vision, l'organiser dans les moindres détails, et être présente jusqu'à la dernière minute du jour J.</p>
+      <p>C'est cette exigence, portée par une équipe d'hôtesses formées et une coordination sans faille, qui fait la réputation de KBSL Events auprès de plus de 1 235 personnes.</p>
+      <div class="signature">— Laura Kabasele, fondatrice de KBSL Events</div>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <div class="stars sr">★ ★ ★ ★ ★</div>
+    <blockquote>« On nous a confié un jour important. KBSL en a fait un souvenir. »</blockquote>
+    <cite>Un avis client KBSL Events</cite>
+    <div class="followers">Rejoignez plus de <strong>1 235 personnes</strong> qui suivent déjà nos réalisations</div>
+  </div>
+</section>
+
+<section class="process">
+  <div class="wrap">
+    <div class="section-head sr">
+      <div class="eyebrow">Comment ça se passe</div>
+      <h2>De l'idée au jour J, <em>sans mauvaise surprise.</em></h2>
+    </div>
+    <div class="timeline sr-group">
+      <div class="t-item sr" style="--sr-i:0">
+        <div class="step-label">Étape 01</div>
+        <h3>Échange</h3>
+        <p>On parle de votre vision, votre budget, votre style — sans jugement, avec honnêteté.</p>
+      </div>
+      <div class="t-item sr" style="--sr-i:1">
+        <div class="step-label">Étape 02</div>
+        <h3>Concept</h3>
+        <p>Nous vous proposons une direction claire : décor, mobilier, ambiance générale.</p>
+      </div>
+      <div class="t-item sr" style="--sr-i:2">
+        <div class="step-label">Étape 03</div>
+        <h3>Organisation</h3>
+        <p>Prestataires, logistique, planning — tout est coordonné en coulisses.</p>
+      </div>
+      <div class="t-item sr" style="--sr-i:3">
+        <div class="step-label">Étape 04</div>
+        <h3>Le grand jour</h3>
+        <p>Nous sommes sur place, avec notre équipe d'hôtesses, pour que vous n'ayez rien d'autre à faire que profiter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap contact-grid sr-group">
+    <div class="sr">
+      <h2>Racontons <em>votre histoire.</em></h2>
+      <p class="lede">Mariage, anniversaire, événement d'entreprise — parlez-nous de votre projet, nous vous répondons rapidement.</p>
+      <a class="btn-ghost" href="https://www.instagram.com/kbsl_events/" target="_blank" rel="noopener">Écrire sur Instagram →</a>
+    </div>
+    <div class="contact-card sr" style="--sr-i:1">
+      <div class="row">
+        <span class="label">Instagram</span>
+        <span class="value"><a href="https://www.instagram.com/kbsl_events/" target="_blank" rel="noopener">@kbsl_events</a></span>
+      </div>
+      <div class="row">
+        <span class="label">Localisation</span>
+        <span class="value">Kinshasa, RDC</span>
+      </div>
+      <div class="row">
+        <span class="label">Partenaire</span>
+        <span class="value"><a href="https://www.instagram.com/kinjacuzzi/" target="_blank" rel="noopener">@kinjacuzzi</a></span>
+      </div>
+      <a class="ig-btn" href="https://www.instagram.com/kbsl_events/" target="_blank" rel="noopener">Démarrer la conversation</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 KBSL Events</span>
+    <span>Kinshasa, RDC</span>
+  </div>
+</footer>
+
+<script>
+  // Nav background on scroll
+  const nav = document.getElementById('nav');
+  const heroParallax = document.getElementById('heroParallax');
+
+  function onScroll(){
+    const y = window.scrollY;
+    if(y > 40){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+
+    // subtle parallax on hero medallion
+    if(heroParallax){
+      const shift = Math.min(y * 0.08, 40);
+      heroParallax.style.transform = `translateY(${shift}px)`;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scroll-triggered reveal
+  const srEls = document.querySelectorAll('.sr');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('sr-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    srEls.forEach(el => io.observe(el));
+  } else {
+    srEls.forEach(el => el.classList.add('sr-visible'));
+  }
+</script>
+
+</body>
+</html>
