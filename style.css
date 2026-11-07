@@ -10,7 +10,7 @@
 
 :root{
   --ivoire:#F0E8DE; --sauge:#D5CDB9; --charbon:#1A1A1A; --taupe:#9C8563; --espresso:#2C1C05;
-  --texte:#4a4339; --muted:#6c6355;
+  --texte:#4a4339; --muted:#6c6355; --taupe-ink:#655333; --taupe-em:#86704F;
   --ease:cubic-bezier(.16,.84,.44,1); --ease-soft:cubic-bezier(.22,.61,.36,1);
   --serif:'Cormorant Garamond',Georgia,serif; --sans:'Urbanist',system-ui,sans-serif;
 }
@@ -22,8 +22,8 @@ a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit;color:inherit}
 .wrap{width:min(1240px,100% - 48px);margin-inline:auto}
 h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.08;letter-spacing:-.005em}
-em{font-style:italic;color:var(--taupe)}
-.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--taupe);margin-bottom:22px}
+em{font-style:italic;color:var(--taupe-em)}
+.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--taupe-ink);margin-bottom:22px}
 section{padding:130px 0}
 
 /* ===== Navigation ===== */
@@ -352,3 +352,63 @@ footer{background:var(--charbon);color:var(--sauge);padding:60px 0 34px;font-siz
   .note{grid-template-columns:1fr;gap:8px}
 }
 @media(max-width:1180px) and (min-width:1001px){.links{gap:22px;font-size:14px}}
+
+/* ===== Correctifs audit : contrastes, cibles tactiles, titres mobiles ===== */
+.founder .eyebrow,.values .eyebrow,.next-cats .eyebrow,.founder em,.values em,.next-cats em,.cat em{color:var(--taupe)}
+.coords span,.follow>span,.field label i,.crumbs,.form-foot small,.form .sub{color:var(--taupe-ink)}
+.note span,.testi-invite .testi-quote em,.concept .tagline{color:var(--taupe-em)}
+.crumbs a{display:inline-block;padding:12px 4px;margin:-12px -4px}
+.coords a{display:inline-block;padding:10px 0;margin:-10px 0}
+.drop>button span{font-size:12px}
+.drop-menu a{min-height:46px}
+@media(max-width:600px){
+  .hero h1{font-size:44px}
+  .page-hero h1{font-size:44px}
+  .page-hero{padding:120px 0 60px}
+}
+
+/* ===== Fondatrice : photo fond blanc seule ===== */
+.founder-photo{aspect-ratio:3/4;max-width:440px;background:#f4f4f2}
+.founder-photo img{object-fit:cover}
+.founder-text p{max-width:540px}
+.founder blockquote{font-size:26px}
+
+/* ===== Qui sommes-nous ===== */
+.about{padding:130px 0}
+.about-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:90px;align-items:center}
+.about-img{aspect-ratio:3/3.9;max-width:440px;width:100%}
+.about-body h2{font-size:clamp(38px,4.4vw,60px);font-weight:300;margin-bottom:28px}
+.about-body>p{font-size:18px;color:var(--texte);max-width:560px;margin-bottom:14px}
+.pillars-row{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);margin-top:42px;border-top:1px solid rgba(44,28,5,.18)}
+.pillars-row li{padding:26px 22px 0 0}
+.pillars-row li+li{padding-left:22px;border-left:1px solid rgba(44,28,5,.18)}
+.pillars-row b{display:block;font-family:var(--serif);font-weight:400;font-size:26px;margin-bottom:6px}
+.pillars-row span{font-size:14.5px;color:var(--muted);line-height:1.5}
+
+/* ===== Vision / Engagements / Signature ===== */
+.values{background:var(--espresso);padding:110px 0}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.value{border:1px solid rgba(213,205,185,.22);padding:52px 38px 46px;text-align:center;border-radius:2px;transition:border-color .5s,background .5s}
+.value:hover{border-color:rgba(213,205,185,.5);background:rgba(240,232,222,.03)}
+.value+.value{border-left:1px solid rgba(213,205,185,.22);padding-left:38px}
+.value .orn{display:block;color:var(--taupe);font-size:14px;margin-bottom:22px}
+.value h3{font-size:34px;color:var(--ivoire);margin-bottom:18px}
+.value p{font-size:16.5px;line-height:1.75;color:#d9d0c1;max-width:320px;margin:0 auto}
+
+/* ===== Pied de page minimal ===== */
+footer{background:var(--charbon);padding:26px 0}
+footer .foot-copy{font-size:13px;color:#a8a296;text-align:center;letter-spacing:.04em;border:0;padding:0}
+
+@media(max-width:1000px){
+  .about-grid{grid-template-columns:1fr;gap:46px}
+  .about-img{margin:0 auto}
+  .values-grid{grid-template-columns:1fr}
+  .value+.value{border-top:1px solid rgba(213,205,185,.22);padding-top:52px;padding-left:38px}
+  .founder-photo{margin:0 auto}
+}
+@media(max-width:600px){
+  .pillars-row{grid-template-columns:1fr;margin-top:30px}
+  .pillars-row li,.pillars-row li+li{padding:18px 0;border-left:0;border-bottom:1px solid rgba(44,28,5,.14)}
+  .value{padding:40px 24px}
+}
+picture{display:contents}

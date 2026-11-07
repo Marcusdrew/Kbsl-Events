@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kbsl-events.vercel.app/sitemap.xml
