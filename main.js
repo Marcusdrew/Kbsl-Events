@@ -73,7 +73,7 @@
   if(form){
     var params = new URLSearchParams(window.location.search);
     var t = params.get('type');
-    var select = form.querySelector('select[name="Type d\'événement"]');
+    var select = form.querySelector('select[name="Service souhaité"]');
     if(t && select){
       Array.prototype.forEach.call(select.options, function(o){ if(o.dataset.key === t) select.value = o.value; });
     }
