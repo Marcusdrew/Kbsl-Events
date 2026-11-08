@@ -412,3 +412,6 @@ footer .foot-copy{font-size:13px;color:#a8a296;text-align:center;letter-spacing:
   .value{padding:40px 24px}
 }
 picture{display:contents}
+.arch-mono{background:var(--sauge);display:grid;place-items:center}
+.arch-mono img{width:38%!important;height:auto!important;object-fit:contain!important}
+.cat img[src*="hotesses-trio"]{object-position:center 20%}
